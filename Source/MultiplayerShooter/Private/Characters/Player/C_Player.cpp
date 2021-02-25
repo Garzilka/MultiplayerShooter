@@ -75,3 +75,34 @@ void AC_Player::LookUpAtRate(float Rate)
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
+
+
+void AC_Player::OnFire()
+{
+
+}
+
+void AC_Player::OnPrimaryWeapon()
+{
+	OnSwitchWeapon(E_WeaponType::E_Prime);
+}
+
+void AC_Player::OnSecondaryWeapon()
+{
+
+}
+
+void AC_Player::OnMeleeWeapon()
+{
+
+}
+
+void AC_Player::OnFastUse_1()
+{
+
+}
+
+void AC_Player::OnFastUse_2()
+{
+
+}

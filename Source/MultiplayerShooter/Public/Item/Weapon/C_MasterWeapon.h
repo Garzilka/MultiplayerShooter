@@ -9,21 +9,25 @@
 /**
  * 
  */
-/*
+
 UENUM(BlueprintType)
 enum E_WeaponType
 {
 	E_Prime UMETA(DisplayName = "Prime"),
 	E_Second UMETA(DisplayName = "Second"),
-	E_Melee UMETA(DisplayName = "Melee")
+	E_Melee UMETA(DisplayName = "Melee"),
+	E_WeaponHide UMETA(DisplayName = "Hide")
 };
-*/
+
 UCLASS()
 class MULTIPLAYERSHOOTER_API AC_MasterWeapon : public AC_MasterItem
 {
 	GENERATED_BODY()
 
+		
 public:
-	//E_WeaponType* WeaponType;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Camera)
+	TEnumAsByte<E_WeaponType> WeaponType;
 	
 };

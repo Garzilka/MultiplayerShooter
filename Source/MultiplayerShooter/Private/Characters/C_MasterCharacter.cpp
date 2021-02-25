@@ -3,17 +3,19 @@
 
 #include "Characters/C_MasterCharacter.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Characters/Components/C_StorageComponent.h"
+#include "Characters/Components/C_WeaponComponent.h"
 
 // Sets default values
 AC_MasterCharacter::AC_MasterCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+
+	//bReplicates = true;
+	
 	GetMesh()->SetRelativeLocation(FVector(0.f, 0.f, -90.f));
 	GetMesh()->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
-	/*
-	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("CharacterMesh1P"));
-	Mesh*/
+	WeaponComponent = CreateDefaultSubobject<UC_WeaponComponent>(TEXT("WeaponComponent"), this);
+	StorageComponent = CreateDefaultSubobject<UC_StorageComponent>(TEXT("StorageComponent"));
 }
 
 // Called when the game starts or when spawned
@@ -37,7 +39,7 @@ void AC_MasterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 }
 
-void AC_MasterCharacter::OnFire()
+void AC_MasterCharacter::OnSwitchWeapon(E_WeaponType EType)
 {
-
+	WeaponComponent->OnSwitchWeapon(EType);
 }

@@ -4,11 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Item/Weapon/C_MasterWeapon.h"
 #include "C_WeaponComponent.generated.h"
 
-
-//class C_MasterWeapon;
+enum E_WeaponType;
+class AC_MasterCharacter;
+class AC_MasterWeapon;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class MULTIPLAYERSHOOTER_API UC_WeaponComponent : public UActorComponent
@@ -18,7 +18,9 @@ class MULTIPLAYERSHOOTER_API UC_WeaponComponent : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UC_WeaponComponent();
+	UC_WeaponComponent(AC_MasterCharacter* OwnerRef);
 
+	void OnSwitchWeapon(E_WeaponType EType);
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -27,12 +29,16 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	AC_MasterWeapon* CurrentWeapon = nullptr;
 
-	void setWeapon()
-	{
-
-	};
-private:
 	AC_MasterWeapon* PrimaryWeapon;
 	AC_MasterWeapon* SecondaryWeapon;
+	AC_MasterWeapon* MeleeWeapon;
+
+private:
+	void DetachCurrentWeapon();
+
+	void AttachCurrentWeapon(AC_MasterWeapon* NewWeapon);
+
+	AC_MasterCharacter* _Owner;
 };

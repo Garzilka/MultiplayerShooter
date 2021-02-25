@@ -50,6 +50,17 @@ protected:
 	void TurnAtRate(float Rate);
 
 //===========================================================================
+	void OnFire();
+
+	void OnPrimaryWeapon();
+
+	void OnSecondaryWeapon();
+
+	void OnMeleeWeapon();
+
+	void OnFastUse_1();
+
+	void OnFastUse_2();
 
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 };
