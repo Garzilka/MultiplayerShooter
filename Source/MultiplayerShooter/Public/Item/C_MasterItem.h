@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "C_MasterItem.generated.h"
 
+class AC_MasterCharacter;
+
 UCLASS()
 class MULTIPLAYERSHOOTER_API AC_MasterItem : public AActor
 {
@@ -17,12 +19,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ItemInfo")
 	float Wheight;
 
+	float State; //!Wear
+
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	void TakeIt(AC_MasterCharacter* Who);
+
+protected:
+	AC_MasterCharacter* _Owner;
 
 };

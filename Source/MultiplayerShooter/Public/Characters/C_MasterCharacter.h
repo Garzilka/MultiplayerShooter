@@ -5,9 +5,10 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Item/Weapon/C_MasterWeapon.h"
-
 #include "C_MasterCharacter.generated.h"
-#define DefaultSpawn FVector(0.f, 0.f, -1000.f), FRotator(0.f, 0.f, 0.f) //Использовать только для спавна объектов которым владеет Игрок!!
+
+#define DefaultSpawn FVector(0.f, 0.f, -1000.f), FRotator(0.f, 0.f, 0.f) //Использовать только для спавна объектов которым владеет Игрок
+
 class UC_StorageComponent;
 class UC_WeaponComponent;
 
@@ -25,12 +26,25 @@ public:
 	UC_WeaponComponent* WeaponComponent;
 	UPROPERTY(Category = Character, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	UC_StorageComponent* StorageComponent;
+
+	void Reload(bool isShort);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CharacterInfo")
+	bool isWeapon;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CharacterInfo")
+	bool isRunning;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CharacterInfo")
+	bool isAiming;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CharacterInfo")
+	bool isReload;
 protected:
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-
+	void Fire(bool IsPressed);
 
 public:	
 

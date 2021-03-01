@@ -20,19 +20,27 @@ public:
 	UC_WeaponComponent();
 	UC_WeaponComponent(AC_MasterCharacter* OwnerRef);
 
+	void spawnWeapon(TSubclassOf<AC_MasterWeapon> WeaponToSpawn);
+
 	void OnSwitchWeapon(E_WeaponType EType);
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	UPROPERTY(replicated)
 	AC_MasterWeapon* CurrentWeapon = nullptr;
 
+	UPROPERTY(replicated)
 	AC_MasterWeapon* PrimaryWeapon;
+	UPROPERTY(replicated)
 	AC_MasterWeapon* SecondaryWeapon;
+	UPROPERTY(replicated)
 	AC_MasterWeapon* MeleeWeapon;
 
 private:

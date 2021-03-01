@@ -5,8 +5,10 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Characters/Components/C_WeaponComponent.h"
 
-AC_Player::AC_Player()
+AC_Player::AC_Player() :
+	AC_MasterCharacter()
 {
 
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.f);
@@ -21,11 +23,15 @@ AC_Player::AC_Player()
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	CameraComponent->SetupAttachment(SpringArm);
 
+	
 
 }
 
-
-
+void AC_Player::BeginPlay()
+{
+	Super::BeginPlay();
+	WeaponComponent->spawnWeapon(WeaponToSpawn);
+}
 
 void AC_Player::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
@@ -38,6 +44,16 @@ void AC_Player::SetupPlayerInputComponent(class UInputComponent* PlayerInputComp
 
 	// Bind fire event
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AC_Player::OnFire);
+	PlayerInputComponent->BindAction("Fire", IE_Released, this, &AC_Player::OnStopFire);
+
+
+	PlayerInputComponent->BindAction("PrimaryWeapon", IE_Pressed, this, &AC_Player::OnPrimaryWeapon);
+	PlayerInputComponent->BindAction("SecondaryWeapon", IE_Pressed, this, &AC_Player::OnSecondaryWeapon);
+	PlayerInputComponent->BindAction("MeleeWeapon", IE_Pressed, this, &AC_Player::OnMeleeWeapon);
+	PlayerInputComponent->BindAction("FastUse_1", IE_Pressed, this, &AC_Player::OnFastUse_1);
+	PlayerInputComponent->BindAction("FastUse_2", IE_Pressed, this, &AC_Player::OnFastUse_2);
+
+	
 
 	// Bind movement events
 	PlayerInputComponent->BindAxis("MoveForward", this, &AC_Player::MoveForward);
@@ -79,22 +95,30 @@ void AC_Player::LookUpAtRate(float Rate)
 
 void AC_Player::OnFire()
 {
-
+	UE_LOG(LogTemp, Warning, TEXT("Player Fire!"));
+	Fire(true); //Fire if pressed
 }
-
+void AC_Player::OnStopFire()
+{
+	Fire(false); //Stop Fire
+}
 void AC_Player::OnPrimaryWeapon()
 {
+
+	UE_LOG(LogTemp, Warning, TEXT("Player Switch OnPrimary!"));
 	OnSwitchWeapon(E_WeaponType::E_Prime);
 }
 
 void AC_Player::OnSecondaryWeapon()
 {
 
+	UE_LOG(LogTemp, Warning, TEXT("Player Switch OnSecond!"));
 }
 
 void AC_Player::OnMeleeWeapon()
 {
 
+	UE_LOG(LogTemp, Warning, TEXT("Player Switch OnMelee!"));
 }
 
 void AC_Player::OnFastUse_1()

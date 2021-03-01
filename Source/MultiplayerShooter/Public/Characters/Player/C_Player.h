@@ -36,10 +36,12 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		float BaseLookUpRate;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		TSubclassOf<AC_MasterWeapon> WeaponToSpawn;
 
 protected:
-
-//===================== | Базовое перемещение | ==============================
+	virtual void BeginPlay() override;
+//===================== | Base Move | ==============================
 
 	void MoveForward(float Val);
 
@@ -51,6 +53,7 @@ protected:
 
 //===========================================================================
 	void OnFire();
+	void OnStopFire();
 
 	void OnPrimaryWeapon();
 

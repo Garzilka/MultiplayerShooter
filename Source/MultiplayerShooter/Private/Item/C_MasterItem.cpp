@@ -2,12 +2,14 @@
 
 
 #include "Item/C_MasterItem.h"
+#include "Characters/C_MasterCharacter.h"
 
 // Sets default values
 AC_MasterItem::AC_MasterItem()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	bReplicates = true;
+	SetReplicateMovement(true);
 
 }
 
@@ -25,3 +27,14 @@ void AC_MasterItem::Tick(float DeltaTime)
 
 }
 
+void AC_MasterItem::TakeIt(AC_MasterCharacter* Who)
+{
+	if (_Owner == nullptr)
+	{
+		_Owner = Who;
+		this->SetActorEnableCollision(false);
+		this->SetActorHiddenInGame(true);
+		FAttachmentTransformRules L_AttachTransform(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, false);
+		this->AttachToComponent(_Owner->GetMesh(), L_AttachTransform, "");
+	}
+}
