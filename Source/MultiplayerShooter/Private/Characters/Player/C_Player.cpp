@@ -16,6 +16,8 @@ AC_Player::AC_Player() :
 	BaseTurnRate = 45.f;
 	BaseLookUpRate = 45.f;
 
+
+
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(GetCapsuleComponent());
 	SpringArm->bUsePawnControlRotation = true;
@@ -30,7 +32,7 @@ AC_Player::AC_Player() :
 void AC_Player::BeginPlay()
 {
 	Super::BeginPlay();
-	WeaponComponent->spawnWeapon(WeaponToSpawn);
+	WeaponComponent->Server_spawnWeapon(WeaponToSpawn);
 }
 
 void AC_Player::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -95,12 +97,13 @@ void AC_Player::LookUpAtRate(float Rate)
 
 void AC_Player::OnFire()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Player Fire!"));
+	UE_LOG(LogTemp, Warning, TEXT("Fire Press!"));
 	Fire(true); //Fire if pressed
 }
 void AC_Player::OnStopFire()
 {
-	Fire(false); //Stop Fire
+	UE_LOG(LogTemp, Warning, TEXT("Fire Release!"));
+	Fire(false); //Stop Fire is Released
 }
 void AC_Player::OnPrimaryWeapon()
 {

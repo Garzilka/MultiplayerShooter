@@ -17,8 +17,6 @@ class MULTIPLAYERSHOOTER_API AC_MasterCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
-		/*UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-		USkeletalMeshComponent* Mesh;*/
 public:
 	// Sets default values for this character's properties
 	AC_MasterCharacter();

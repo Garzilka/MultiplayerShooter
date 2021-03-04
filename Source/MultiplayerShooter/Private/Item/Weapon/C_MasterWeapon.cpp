@@ -4,7 +4,9 @@
 #include "Item/Weapon/C_MasterWeapon.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Item/Weapon/C_MasterProjectile.h"
 #include "Characters/C_MasterCharacter.h"
+#include "Engine/World.h"
 
 
 AC_MasterWeapon::AC_MasterWeapon()
@@ -18,21 +20,22 @@ AC_MasterWeapon::AC_MasterWeapon()
 
 void AC_MasterWeapon::OnFire(bool isPressed)
 {
-	if (isPressed) //If true -> fire, if false -> break recursion
+	UE_LOG(LogTemp, Warning, TEXT("Call onFire!"));
+	IsPressed = isPressed;
+	if (IsPressed) //If true -> fire, if false -> break recursion
 	{
-		IsPressed = true;
 		switch (FireMode)
 		{
 		case E_OneShoot:
 		{
 			UE_LOG(LogTemp, Warning, TEXT("E_OneShoot!"));
-			spawnProjectile();
+			Server_spawnProjectile();
 			break;
 		}
 		case E_OneShoot_Reload:
 		{
 			UE_LOG(LogTemp, Warning, TEXT("E_OneShoot_Reload!"));
-			spawnProjectile();
+			Server_spawnProjectile();
 			_Owner->Reload(currentAmmo > 0);
 			break;
 		}
@@ -69,7 +72,7 @@ void AC_MasterWeapon::Fire()
 		{
 			if (!Jammed)
 			{
-				spawnProjectile();
+				Server_spawnProjectile();
 				GetWorld()->GetTimerManager().SetTimer(_TimerShot, this, &AC_MasterWeapon::Fire, ShootDelay, false);
 			}
 			else
@@ -79,9 +82,25 @@ void AC_MasterWeapon::Fire()
 			_Owner->Reload(false);
 	}
 }
-void AC_MasterWeapon::spawnProjectile()
+void AC_MasterWeapon::Server_spawnProjectile_Implementation()
 {
 	currentAmmo--;
+	FActorSpawnParameters Params;
+	FVector L_LocationForSpawn = _Owner->GetActorLocation() + _Owner->GetActorForwardVector() * 100;
+	GetWorld()->SpawnActor<AC_MasterProjectile>(Projectile, L_LocationForSpawn, _Owner->GetActorRotation(), Params);
+	/*AC_MasterProjectile* L_Projectile =*/ 
+	/*if (NewWeapon != nullptr)
+	{
+		if (NewWeapon->WeaponType == E_WeaponType::E_Prime)
+		{
+			PrimaryWeapon = NewWeapon;
+			PrimaryWeapon->SetActorEnableCollision(false);
+			PrimaryWeapon->SetActorHiddenInGame(true);
+			if (_Owner != nullptr)
+				PrimaryWeapon->TakeIt(_Owner);
+		}
+
+	}**/
 	UE_LOG(LogTemp, Warning, TEXT("Shoot!"));
 }
 bool AC_MasterWeapon::CanFire() //Perhaps this can be removed

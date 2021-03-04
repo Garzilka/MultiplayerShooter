@@ -9,7 +9,7 @@
 /**
  * 
  */
-
+class AC_MasterProjectile;
 class USkeletalMeshComponent;
 class UCameraComponent;
 
@@ -48,32 +48,33 @@ public:
 	AC_MasterWeapon();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WeaponInfo)
-		TEnumAsByte<E_WeaponType> WeaponType;
+	TEnumAsByte<E_WeaponType> WeaponType;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WeaponInfo)
-		TEnumAsByte<E_FireMode> FireMode;
-
+	TEnumAsByte<E_FireMode> FireMode;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Value)
+	TSubclassOf<AC_MasterProjectile> Projectile;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WeaponInfo)
 	int maxAmmo = 30;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WeaponInfo)
 	int currentAmmo = 30;
-
 	void OnFire(bool isPressed);
 
 	void Fire();
 	//UPROPERTY(Replicated)
 	bool Reload; //Out of ammo
-	
-	bool shortReload; //Jammed or a weapon with reload every shots (Shotgun)
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = WeaponInfo)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Value)
 	float ShootDelay = 0.1f;
 
 	
 
 private:
-	void spawnProjectile();
+
+	UFUNCTION(Server, Reliable)
+		void Server_spawnProjectile();
+	void Server_spawnProjectile_Implementation();
 
 	bool CanFire();
 

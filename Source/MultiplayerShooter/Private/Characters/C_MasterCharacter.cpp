@@ -54,6 +54,5 @@ void AC_MasterCharacter::Reload(bool isShort)
 }
 void AC_MasterCharacter::Fire(bool IsPressed)
 {
-	if (WeaponComponent->CurrentWeapon != nullptr)
-		WeaponComponent->CurrentWeapon->OnFire(IsPressed);
+	WeaponComponent->OnFire(IsPressed);
 }

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Net/UnrealNetwork.h"
 #include "C_WeaponComponent.generated.h"
 
 enum E_WeaponType;
@@ -20,27 +21,46 @@ public:
 	UC_WeaponComponent();
 	UC_WeaponComponent(AC_MasterCharacter* OwnerRef);
 
-	void spawnWeapon(TSubclassOf<AC_MasterWeapon> WeaponToSpawn);
-
 	void OnSwitchWeapon(E_WeaponType EType);
+	
+	void OnFire(bool IsPressed);
+
+	UFUNCTION(Server, Reliable)
+		void Server_Fire(bool IsPressed);
+	void Server_Fire_Implementation(bool IsPressed);
+
+
+
+	UFUNCTION(Server, Reliable)
+		void Server_spawnWeapon(TSubclassOf<AC_MasterWeapon> WeaponToSpawn);
+	void Server_spawnWeapon_Implementation(TSubclassOf<AC_MasterWeapon> WeaponToSpawn);
+	
+
+	UFUNCTION(Server, Reliable)
+		void Server_OnSwitchWeapon(E_WeaponType EType);
+	void Server_OnSwitchWeapon_Implementation(E_WeaponType EType);
+
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+
+
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	UPROPERTY(replicated)
+	UPROPERTY(Category = Weapon, VisibleAnywhere, BlueprintReadOnly, replicated)
 	AC_MasterWeapon* CurrentWeapon = nullptr;
 
-	UPROPERTY(replicated)
+	UPROPERTY(Category = Weapon, VisibleAnywhere, BlueprintReadOnly, replicated)
 	AC_MasterWeapon* PrimaryWeapon;
-	UPROPERTY(replicated)
+	UPROPERTY(Category = Weapon, VisibleAnywhere, BlueprintReadOnly, replicated)
 	AC_MasterWeapon* SecondaryWeapon;
-	UPROPERTY(replicated)
+	UPROPERTY(Category = Weapon, VisibleAnywhere, BlueprintReadOnly, replicated)
 	AC_MasterWeapon* MeleeWeapon;
 
 private:
