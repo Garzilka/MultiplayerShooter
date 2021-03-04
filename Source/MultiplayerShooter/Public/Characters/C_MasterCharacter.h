@@ -8,13 +8,14 @@
 #include "C_MasterCharacter.generated.h"
 
 #define DefaultSpawn FVector(0.f, 0.f, -1000.f), FRotator(0.f, 0.f, 0.f) //Использовать только для спавна объектов которым владеет Игрок
-
 class UC_StorageComponent;
 class UC_WeaponComponent;
 
 UCLASS()
 class MULTIPLAYERSHOOTER_API AC_MasterCharacter : public ACharacter
 {
+
+
 	GENERATED_BODY()
 
 public:
@@ -25,16 +26,28 @@ public:
 	UPROPERTY(Category = Character, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	UC_StorageComponent* StorageComponent;
 
-	void Reload(bool isShort);
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CharacterInfo")
+	bool isWeapon = false;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CharacterInfo", replicated)
+	bool isRunning = false;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CharacterInfo", replicated)
+	bool IsCrouched = false;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CharacterInfo")
+	bool CanRun = true;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CharacterInfo")
+	bool WantsToRun = false;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CharacterInfo")
+	bool isAiming = false;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CharacterInfo")
+	bool WantsToAim = false;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CharacterInfo", replicated)
+	bool ChangingWeapon = false;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "CharacterInfo", replicated)
+	bool Reloading = false;
+	
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CharacterInfo")
-	bool isWeapon;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CharacterInfo")
-	bool isRunning;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CharacterInfo")
-	bool isAiming;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "CharacterInfo")
-	bool isReload;
+
 protected:
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
@@ -43,8 +56,24 @@ protected:
 	virtual void BeginPlay() override;
 
 	void Fire(bool IsPressed);
+	
+
+	void Run(bool IsPressed);
+	UFUNCTION(Server, Reliable)
+		void Server_Run(bool IsPressed);
+	void Server_Run_Implementation(bool IsPressed);
+
+	void OnAiming(bool IsPressed);
+	UFUNCTION(Server, Reliable)
+		void Server_OnAiming(bool IsPressed);
+	void Server_OnAiming_Implementation(bool IsPressed);
+
+	
 
 public:	
+	
+
+	void Reload(bool isShort);
 
 	void OnSwitchWeapon(E_WeaponType EType);
 
@@ -53,8 +82,14 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	
 private:
+	float RunSpeedModifier = 1.5f;
 
+	float DefaultMovementSpeed = 270;
 
+	void CheckRun();
+
+	bool CheckCanAim();
+
+	bool CheckCanRun();
 };

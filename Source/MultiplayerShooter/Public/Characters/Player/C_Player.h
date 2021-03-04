@@ -29,7 +29,9 @@ class MULTIPLAYERSHOOTER_API AC_Player : public AC_MasterCharacter
 	UCameraComponent* CameraComponent;
 public:
 	AC_Player();
+	void RunEffect(bool IsRun);
 
+	float DeffaultFieldOfView = 90.f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		float BaseTurnRate;
 
@@ -50,9 +52,14 @@ protected:
 	void LookUpAtRate(float Rate);
 
 	void TurnAtRate(float Rate);
+	
+	void StartRun();
+
+	void StopRun();
 
 //===========================================================================
 	void OnFire();
+
 	void OnStopFire();
 
 	void OnPrimaryWeapon();
@@ -64,6 +71,10 @@ protected:
 	void OnFastUse_1();
 
 	void OnFastUse_2();
+
+	void StartAiming();
+
+	void StopAiming();
 
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 };

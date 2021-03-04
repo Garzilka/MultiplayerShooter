@@ -5,6 +5,7 @@
 #include "Characters/C_MasterCharacter.h"
 #include "Item/Weapon/C_MasterWeapon.h"
 #include "Engine/World.h"
+#include "Characters/Player/C_Player.h"
 // Sets default values for this component's properties
 UC_WeaponComponent::UC_WeaponComponent()
 {
@@ -16,9 +17,12 @@ UC_WeaponComponent::UC_WeaponComponent(AC_MasterCharacter* OwnerRef) :
 	if (_Owner != nullptr)
 		_Owner = OwnerRef;
 	_Owner = (AC_MasterCharacter*)GetOwner();
+
 	PrimaryComponentTick.bCanEverTick = true;
 
-	
+	Aiming();
+
+
 }
 void UC_WeaponComponent::GetLifetimeReplicatedProps(TArray < FLifetimeProperty > & OutLifetimeProps) const
 {
@@ -166,4 +170,20 @@ void UC_WeaponComponent::Server_Fire_Implementation(bool IsPressed)
 		CurrentWeapon->OnFire(IsPressed);
 		UE_LOG(LogTemp, Warning, TEXT("Call OnFire!"));
 	}
+}
+
+void UC_WeaponComponent::Aiming()
+{
+	if (GetOwner() == nullptr)
+		UE_LOG(LogTemp, Warning, TEXT("Null"));
+	AC_Player* L_IsPlayer = (AC_Player*)GetOwner();
+	if (L_IsPlayer != nullptr)
+	{
+		if(CurrentWeapon != nullptr)
+			L_IsPlayer->isAiming = true;
+		UE_LOG(LogTemp, Warning, TEXT("Aiming!"));
+	}
+	else
+		UE_LOG(LogTemp, Warning, TEXT("Not Aiming!"));
+
 }

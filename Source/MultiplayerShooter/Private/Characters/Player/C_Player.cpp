@@ -19,7 +19,8 @@ AC_Player::AC_Player() :
 
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
-	SpringArm->SetupAttachment(GetCapsuleComponent());
+	SpringArm->SetupAttachment(GetMesh(), "headSocket");
+	SpringArm->TargetArmLength = 0;
 	SpringArm->bUsePawnControlRotation = true;
 
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
@@ -47,7 +48,8 @@ void AC_Player::SetupPlayerInputComponent(class UInputComponent* PlayerInputComp
 	// Bind fire event
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AC_Player::OnFire);
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &AC_Player::OnStopFire);
-
+	PlayerInputComponent->BindAction("Aiming", IE_Pressed, this, &AC_Player::StartAiming);
+	PlayerInputComponent->BindAction("Aiming", IE_Released, this, &AC_Player::StopAiming);
 
 	PlayerInputComponent->BindAction("PrimaryWeapon", IE_Pressed, this, &AC_Player::OnPrimaryWeapon);
 	PlayerInputComponent->BindAction("SecondaryWeapon", IE_Pressed, this, &AC_Player::OnSecondaryWeapon);
@@ -56,10 +58,12 @@ void AC_Player::SetupPlayerInputComponent(class UInputComponent* PlayerInputComp
 	PlayerInputComponent->BindAction("FastUse_2", IE_Pressed, this, &AC_Player::OnFastUse_2);
 
 	
-
 	// Bind movement events
 	PlayerInputComponent->BindAxis("MoveForward", this, &AC_Player::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AC_Player::MoveRight);
+	PlayerInputComponent->BindAction("Run", IE_Pressed, this, &AC_Player::StartRun);
+	PlayerInputComponent->BindAction("Run", IE_Released, this, &AC_Player::StopRun);
+	
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
@@ -132,4 +136,34 @@ void AC_Player::OnFastUse_1()
 void AC_Player::OnFastUse_2()
 {
 
+}
+
+void AC_Player::StartAiming()
+{
+	OnAiming(true);
+}
+
+void AC_Player::StopAiming()
+{
+	OnAiming(false);
+}
+
+void AC_Player::StartRun()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Try Run!"));
+	Run(true);
+}
+
+void AC_Player::StopRun()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Stop Run!"));
+	Run(false);
+}
+
+void AC_Player::RunEffect(bool IsRun)
+{
+	if(IsRun)
+	CameraComponent->FieldOfView = 110.f;
+	else
+		CameraComponent->FieldOfView = DeffaultFieldOfView;
 }

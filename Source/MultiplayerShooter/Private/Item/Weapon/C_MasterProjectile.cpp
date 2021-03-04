@@ -17,7 +17,7 @@ AC_MasterProjectile::AC_MasterProjectile()
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("SpringArm"));
 	Sphere->SetupAttachment(GetRootComponent());
 	Sphere->SetGenerateOverlapEvents(true);
-	Sphere->OnComponentBeginOverlap.AddDynamic(this, &AC_MasterProjectile::_OnBeginEverlap);
+	//Sphere->OnComponentBeginOverlap.AddDynamic(this, &AC_MasterProjectile::_OnBeginEverlap);
 	
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Camera"));
 	Mesh->SetupAttachment(Sphere);
